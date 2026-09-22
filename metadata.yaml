@@ -4,4 +4,5 @@ desc: 让AstrBot能够主动处理戳一戳消息段。
 version: v1.0.1
 author: JimmyYu01
 repo: https://github.com/JimmyYu01/astrbot_plugin_pokeable
-support_platforms: aiocqhttp
+support_platforms:
+  - aiocqhttp

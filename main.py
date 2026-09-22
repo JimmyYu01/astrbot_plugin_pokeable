@@ -44,18 +44,19 @@ class MyPlugin(Star):
             return f"戳了一下{user_poked}"
         return "当前消息平台不支持戳一戳"
 
-    @filter.event_message_type(filter.EventMessageType.ALL)
+    @filter.platform_adapter_type(filter.PlatformAdapterType.AIOCQHTTP)
     async def reply_poke(self, event: AstrMessageEvent):
         """主动回复戳一戳。"""
         if not self.config.get("reply", False):
             return
         for message in event.get_messages():
             if (
-                isinstance(message, Comp.Poke)
-                and str(message.id) == event.get_self_id()
+                not isinstance(message, Comp.Poke)
+                or str(message.id) != event.get_self_id()
             ):
-                event.message_str = f"你被{event.get_sender_id()}戳了一下"
-                event.is_at_or_wake_command = True
+                break
+            event.message_str = f"你被{event.get_sender_id()}戳了一下"
+            event.is_at_or_wake_command = True
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
