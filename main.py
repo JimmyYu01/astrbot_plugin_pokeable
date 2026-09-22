@@ -1,5 +1,5 @@
 import astrbot.api.message_components as Comp
-from astrbot.api import AstrBotConfig
+from astrbot.api import AstrBotConfig, logger
 from astrbot.api.event import AstrMessageEvent, filter
 from astrbot.api.star import Context, Star, register
 
@@ -8,7 +8,7 @@ from astrbot.api.star import Context, Star, register
     "astrbot_plugin_pokeable",
     "JimmyYu01",
     "让AstrBot能够主动处理戳一戳消息段。",
-    "1.0.1",
+    "1.0.3",
 )
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
@@ -44,18 +44,22 @@ class MyPlugin(Star):
             return f"戳了一下{user_poked}"
         return "当前消息平台不支持戳一戳"
 
-    @filter.platform_adapter_type(filter.PlatformAdapterType.AIOCQHTTP)
+    @filter.event_message_type(filter.EventMessageType.ALL)
     async def reply_poke(self, event: AstrMessageEvent):
         """主动回复戳一戳。"""
-        if not self.config.get("reply", False):
-            return
-        for message in event.get_messages():
-            if (
-                not isinstance(message, Comp.Poke)
-                or str(message.id) != event.get_self_id()
-            ):
-                break
-            event.message_str = f"你被{event.get_sender_id()}戳了一下"
+        if event.get_platform_name() == "aiocqhttp":
+            if not self.config.get("reply", False):
+                return
+            messages = event.get_messages()
+            if messages == []:
+                return
+            if not isinstance(messages[0], Comp.Poke):
+                return
+            if str(messages[0].id) != event.get_self_id():
+                return
+            message_str = f"{event.get_sender_id()}戳了戳你"
+            logger.info(message_str)
+            event.message_str = message_str
             event.is_at_or_wake_command = True
 
     async def terminate(self):
