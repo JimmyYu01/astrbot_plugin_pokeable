@@ -1,0 +1,6 @@
+{
+  "reply": {
+    "description": "主动回复戳一戳",
+    "type": "bool"
+  }
+}
