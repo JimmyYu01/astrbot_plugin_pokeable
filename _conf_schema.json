@@ -1,6 +1,17 @@
 {
-  "reply": {
+  "proactive_reply": {
     "description": "主动回复戳一戳",
-    "type": "bool"
+    "type": "object",
+    "items": {
+      "enable": {
+        "description": "启用",
+        "type": "bool"
+      },
+      "probability": {
+        "description": "回复概率",
+        "type": "float",
+        "slider": {"min": 0, "max": 1, "step": 0.01}
+      }
+    }
   }
 }
