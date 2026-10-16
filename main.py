@@ -47,11 +47,11 @@ class MyPlugin(Star):
                     user_id=user,
                 )
             return f"你戳了戳 {user}"
-        return "当前消息平台暂未适配"
+        return "暂未适配当前消息平台"
 
     @filter.event_message_type(filter.EventMessageType.ALL)
-    async def reply_poke(self, event: AstrMessageEvent):
-        """戳一戳主动回复。"""
+    async def proactive_reply(self, event: AstrMessageEvent):
+        """被戳时主动回复。"""
         if event.get_platform_name() == "aiocqhttp":
             if not self.proactive_reply_enable:
                 return

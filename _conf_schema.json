@@ -1,6 +1,6 @@
 {
   "proactive_reply": {
-    "description": "主动回复戳一戳",
+    "description": "被戳时主动回复",
     "type": "object",
     "items": {
       "enable": {
